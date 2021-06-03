@@ -1,13 +1,22 @@
 import "./styles.css";
 
-import { Layout, Menu } from "antd";
-import { Form, Input, Button, Typography } from "antd";
+import { Layout, Menu } from "antd"
+import { Form, Input, Button, Typography } from "antd"
+import { DollarOutlined } from "@ant-design/icons"
+import API from "../../helpers/api";
+import { login } from "../../helpers/auth";
+import { Redirect } from "react-router";
 
-const { Title } = Typography;
+const { Title } = Typography
 
-function Login() {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+function SignIn() {
+  const onFinish = async (user) => {
+    const response = await API.post('login', user)
+    if (response.valido){
+      login(user.username)
+      return <Redirect to='/'/>
+    }
+    alert('Dados incorretos')
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -19,6 +28,7 @@ function Login() {
       <Layout breakpoint="lg" className="auth-layout">
         <div className="auth-form">
           <Title level={2} className="mb-8">
+            <DollarOutlined className="mr-2"/>
             Gastos pessoais
           </Title>
           <Form
@@ -37,7 +47,7 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: "Please input your username!",
+                  message: "Coloque um nome de usuário válido",
                 },
               ]}
             >
@@ -50,7 +60,7 @@ function Login() {
               rules={[
                 {
                   required: true,
-                  message: "Please input your password!",
+                  message: "Coloque uma senha válida",
                 },
               ]}
             >
@@ -73,4 +83,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignIn;
