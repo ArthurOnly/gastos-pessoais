@@ -1,26 +1,29 @@
 import "./styles.css";
 
-import { Layout, Menu } from "antd"
-import { Form, Input, Button, Typography } from "antd"
-import { DollarOutlined } from "@ant-design/icons"
+import { Link } from "react-router-dom";
+import { Layout } from "antd";
+import { Form, Input, Button, Typography, message } from "antd";
+import { DollarOutlined } from "@ant-design/icons";
 import API from "../../helpers/api";
-import { login } from "../../helpers/auth";
+import { login, isAuthenticated } from "../../helpers/auth";
 import { Redirect } from "react-router";
 
-const { Title } = Typography
+const { Title } = Typography;
 
 function SignIn() {
-  const onFinish = async (user) => {
-    const response = await API.post('login', user)
-    if (response.valido){
-      login(user.username)
-      return <Redirect to='/'/>
-    }
-    alert('Dados incorretos')
-  };
+  if (isAuthenticated()) return <Redirect to="/" />;
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onFinish = async (user) => {
+    const request = await API.post("/login", user);
+    const response = request.data;
+
+    if (response.valido) {
+      login(user.username);
+      message.success("Logado com sucesso");
+      return <Redirect to="/" />;
+    }
+
+    message.error("Falha no login. Verifique os dados");
   };
 
   return (
@@ -28,7 +31,7 @@ function SignIn() {
       <Layout breakpoint="lg" className="auth-layout">
         <div className="auth-form">
           <Title level={2} className="mb-8">
-            <DollarOutlined className="mr-2"/>
+            <DollarOutlined className="mr-2" />
             Gastos pessoais
           </Title>
           <Form
@@ -39,7 +42,6 @@ function SignIn() {
               remember: true,
             }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
           >
             <Form.Item
               label="Username"
@@ -74,7 +76,9 @@ function SignIn() {
             </Form.Item>
             <div className="d-flex flex-row align-center">
               <Typography>Não tem uma conta?</Typography>
-              <Button type="link">Cadastre-se</Button>
+              <Link to="/sign-up">
+                <Button type="link">Cadastre-se</Button>
+              </Link>
             </div>
           </Form>
         </div>

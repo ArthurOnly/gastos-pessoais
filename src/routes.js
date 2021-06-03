@@ -6,18 +6,11 @@ import { isAuthenticated } from "./helpers/auth";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 
-const PrivateRoute = ({ children: Children, component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isAuthenticated() ? (
-        <Children {...props} />
-      ) : (
-        <Redirect to={{ pathname: "/sign-in", state: { from: props.location } }} />
-      )
-    }
-  />
-);
+const PrivateRoute = ({children, ...rest}) => (
+  <Route {...rest}>
+    {isAuthenticated() ? children : <Redirect to='/sign-in'/> }
+  </Route>
+)
 
 function Routes() {
   return (
@@ -32,7 +25,9 @@ function Routes() {
         <Route path="/sign-up">
           <SignUp />
         </Route>
-        <PrivateRoute path="/test" component={()=> <h1>Teste</h1>} />
+        <PrivateRoute path="/test">
+          <h1>Teste</h1>
+        </PrivateRoute>
       </Switch>
     </BrowserRouter>
   );

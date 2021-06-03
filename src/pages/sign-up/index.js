@@ -1,24 +1,24 @@
 import API from '../../helpers/api'
-import {login} from '../../helpers/auth'
+import {login, isAuthenticated} from '../../helpers/auth'
 import "./styles.css";
 
 import { Layout } from "antd"
-import { Form, Input, Button, Typography } from "antd"
+import { Form, Input, Button, Typography, message } from "antd"
 import { DollarOutlined } from "@ant-design/icons"
-import { Redirect, Link } from 'react-router';
+import { Redirect, Link } from 'react-router-dom';
 
 const { Title } = Typography
 
 function SignUp() {
+
+  if (isAuthenticated()) return <Redirect to='/'/>
+
   const onFinish = (user) => {
     API.post('/usuario', user)
+    .then((res) => console.log(res))
     .then(()=> login(user))
-    .then(()=><Redirect to='/'></Redirect>)
-    .catch(()=> alert('Um erro ocorreu'))
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    .then(()=> message.success('Usuário criado com sucesso'))
+    .catch(()=> message.error('Falha na criação do usuário'))
   };
 
   return (
@@ -37,7 +37,6 @@ function SignUp() {
               remember: true,
             }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
           >
             <Form.Item
               label="Username"
@@ -45,7 +44,7 @@ function SignUp() {
               rules={[
                 {
                   required: true,
-                  message: "Coloque um nome de usuário válido",
+                  message: "Insira um nome de usuário válido",
                 },
               ]}
             >
@@ -54,11 +53,11 @@ function SignUp() {
 
             <Form.Item
               label="Password"
-              name="password"
+              name="senha"
               rules={[
                 {
                   required: true,
-                  message: "Coloque uma senha válida",
+                  message: "Insira uma senha válida",
                 },
               ]}
             >
@@ -71,7 +70,7 @@ function SignUp() {
               rules={[
                 {
                   required: true,
-                  message: "Coloque uma meta válida",
+                  message: "Insira uma meta válida",
                 },
               ]}
             >
@@ -86,7 +85,9 @@ function SignUp() {
             </Form.Item>
             <div className="d-flex flex-row align-center">
               <Typography>Já tem uma conta?</Typography>
-              <Button type="link">Login</Button>
+              <Link to='sign-in'>
+                <Button type="link">Login</Button>
+              </Link>
             </div>
           </Form>
         </div>
