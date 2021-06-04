@@ -6,6 +6,8 @@ import { isAuthenticated } from "./helpers/auth"
 import SignIn from "./pages/sign-in"
 import SignUp from "./pages/sign-up"
 import Dashboard from './pages/dashboard'
+import Extrato from './pages/extrato'
+import CreateSpent from './pages/gasto'
 
 const PrivateRoute = ({children, ...rest}) => (
   <Route {...rest}>
@@ -19,6 +21,12 @@ function Routes() {
       <Switch>
         <PrivateRoute exact path="/">
           <Dashboard/>
+        </PrivateRoute>
+        <PrivateRoute path="/extrato">
+          <Extrato />
+        </PrivateRoute>
+        <PrivateRoute path="/gasto/create">
+          <CreateSpent />
         </PrivateRoute>
         <Route path="/sign-in">
           <SignIn />

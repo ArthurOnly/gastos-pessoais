@@ -1,24 +1,36 @@
-import API from '../../helpers/api'
-import {login, isAuthenticated} from '../../helpers/auth'
+import { useState } from "react";
+import API from "../../helpers/api";
+import { login, isAuthenticated } from "../../helpers/auth";
 import "./styles.css";
 
-import { Layout } from "antd"
-import { Form, Input, Button, Typography, message } from "antd"
-import { DollarOutlined } from "@ant-design/icons"
-import { Redirect, Link } from 'react-router-dom';
+import { Layout } from "antd";
+import { Form, Input, Button, Typography, message, Spin } from "antd";
+import { DollarOutlined } from "@ant-design/icons";
+import { Redirect, Link, useHistory } from "react-router-dom";
 
-const { Title } = Typography
+const { Title } = Typography;
 
 function SignUp() {
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
-  if (isAuthenticated()) return <Redirect to='/'/>
+  if (isAuthenticated()) return <Redirect to="/" />;
 
-  const onFinish = (user) => {
-    API.post('/usuario', user)
-    .then((res) => console.log(res))
-    .then(()=> login(user))
-    .then(()=> message.success('Usuário criado com sucesso'))
-    .catch(()=> message.error('Falha na criação do usuário'))
+  const onFinish = async (user) => {
+    setLoading(true);
+    const request = await API.post("/usuario", user);
+    setLoading(false);
+
+    const response = request.data;
+
+    if (response.erro) {
+      message.error("Falha na criação do usuário");
+      return;
+    }
+
+    login(user.username);
+    message.success("Usuário criado com sucesso");
+    history.push("/");
   };
 
   return (
@@ -26,7 +38,7 @@ function SignUp() {
       <Layout breakpoint="lg" className="auth-layout">
         <div className="auth-form">
           <Title level={2} className="mb-8">
-            <DollarOutlined className="mr-2"/>
+            <DollarOutlined className="mr-2" />
             Gastos pessoais
           </Title>
           <Form
@@ -74,18 +86,19 @@ function SignUp() {
                 },
               ]}
             >
-              <Input prefix={"$"} type="number"/>
+              <Input prefix={"$"} type="number" />
             </Form.Item>
 
-
             <Form.Item>
-              <Button block type="primary" htmlType="submit">
-                Cadastre-se
-              </Button>
+              <Spin spinning={loading}>
+                <Button block type="primary" htmlType="submit">
+                  Cadastre-se
+                </Button>
+              </Spin>
             </Form.Item>
             <div className="d-flex flex-row align-center">
               <Typography>Já tem uma conta?</Typography>
-              <Link to='sign-in'>
+              <Link to="sign-in">
                 <Button type="link">Login</Button>
               </Link>
             </div>
