@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import React, { useEffect } from "react"
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
-import { isAuthenticated } from "./helpers/auth";
+import { isAuthenticated } from "./helpers/auth"
 
-import SignIn from "./pages/sign-in";
-import SignUp from "./pages/sign-up";
+import SignIn from "./pages/sign-in"
+import SignUp from "./pages/sign-up"
+import Dashboard from './pages/dashboard'
 
 const PrivateRoute = ({children, ...rest}) => (
   <Route {...rest}>
@@ -17,7 +18,7 @@ function Routes() {
     <BrowserRouter>
       <Switch>
         <PrivateRoute exact path="/">
-          <h1>Dashboard</h1>
+          <Dashboard/>
         </PrivateRoute>
         <Route path="/sign-in">
           <SignIn />

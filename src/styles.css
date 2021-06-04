@@ -1,0 +1,9 @@
+.mh-100-vh{
+    min-height: 100vh !important;
+}
+
+@media(min-width: 992px) {
+    body .lg-w-auto{
+        width: auto !important;
+    }
+}

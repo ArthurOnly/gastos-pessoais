@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Routes from './routes'
+
+import './styles.css'
 import 'antd/dist/antd.css';
 import 'antd-css-utilities/utility.min.css'
 
