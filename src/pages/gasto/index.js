@@ -98,7 +98,7 @@ function CreateSpent() {
             </Form>
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>@2021</Footer>
+        <Footer style={{ textAlign: "center" }}>©2021</Footer>
       </Layout>
     </Layout>
   );
