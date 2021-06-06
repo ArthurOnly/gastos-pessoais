@@ -1,4 +1,4 @@
-import { Layout, Progress, Card, Typography, Skeleton } from "antd";
+import { Layout, Progress, Card, Typography, Skeleton, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MainMenu from "../../components/menu";
@@ -10,6 +10,7 @@ const { Content, Footer } = Layout;
 function Dashboard() {
   const [meta, setMeta] = useState();
   const [gastos, setGastos] = useState(0);
+  const [spentsByCategories, setSpentsByCategories] = useState({});
 
   useEffect(() => {
     async function f() {
@@ -30,10 +31,34 @@ function Dashboard() {
       const responseMeta = requestMeta.data;
       if (mounted) setMeta(Number(responseMeta.meta));
     }
-    let mounted = true
-    if (mounted) f();
-    return () =>  mounted = false
+    let mounted = true;
+    if (mounted) {
+      f();
+      getSpentsList();
+    }
+
+    return () => (mounted = false);
   }, []);
+
+  async function getSpentsList() {
+    const username = getUser();
+    const request = await API.get("/gasto", { params: { username } });
+    const response = request.data;
+    const spents = response.gastos;
+
+    let spentsCategories = {};
+    spents.forEach((spent) => {
+      const value = Number(spent.valor);
+      if (!Object.keys(spentsCategories).includes(spent.categoria)) {
+        spentsCategories[spent.categoria] = value;
+      } else {
+        spentsCategories[spent.categoria] =
+          spentsCategories[spent.categoria] + value;
+      }
+    });
+    setSpentsByCategories(spentsCategories)
+    return spentsCategories;
+  }
 
   return (
     <Layout className="mh-100-vh">
@@ -63,13 +88,23 @@ function Dashboard() {
                 style={{ width: 300 }}
               >
                 {gastos ? (
-                  <Typography>R$ {gastos}</Typography>
+                  <Typography>Totais: R$ {gastos}</Typography>
                 ) : (
                   <Skeleton paragraph={{ rows: 0 }} active />
                 )}
+                <Divider />
+                {Object.keys(spentsByCategories) ? (
+                  Object.keys(spentsByCategories).map((spent) => 
+                    <Typography key={spent}>{spent}: R$ {spentsByCategories[spent]}</Typography>
+                  )
+                ) : (
+                  <Skeleton paragraph={{ rows: 4 }} active />
+                )}
               </Card>
               <Link to="/extrato">
-                <Typography style={{color: "#1890ff"}}>Ver extrato</Typography>
+                <Typography style={{ color: "#1890ff" }}>
+                  Ver extrato
+                </Typography>
               </Link>
             </div>
           </div>

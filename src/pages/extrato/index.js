@@ -52,6 +52,7 @@ function Extrato() {
         let dataFormatada =
           data.getDate() + "/" + mes + "/" + data.getFullYear();
         spent.data = dataFormatada;
+        spent.valor = "R$ "+spent.valor;
         spent.action = (
           <Button
             danger
