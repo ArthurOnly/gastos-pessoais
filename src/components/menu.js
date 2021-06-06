@@ -21,7 +21,7 @@ function MainMenu() {
   return (
     <Sider breakpoint="lg" collapsedWidth="0">
       <Link to="/">
-        <Title style={{ color: "#fff" }} level={4} className="mb-8 py-2 px-2">
+        <Title style={{ color: "#fff" }} level={5} className="mb-8 py-2 px-5">
           <DollarOutlined className="mr-2" />
           Gastos pessoais
         </Title>

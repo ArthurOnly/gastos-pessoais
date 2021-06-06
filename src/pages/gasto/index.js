@@ -1,7 +1,6 @@
 import {
   Layout,
   Form,
-  InputNumber,
   Input,
   Spin,
   Button,
@@ -11,17 +10,15 @@ import {
   Typography,
 } from "antd";
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
 import MainMenu from "../../components/menu";
 import API from "../../helpers/api";
 import { getUser } from "../../helpers/auth";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer } = Layout;
 const { Option } = Select;
 const { Title } = Typography;
 
 function CreateSpent() {
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (gasto) => {
@@ -54,7 +51,8 @@ function CreateSpent() {
               size="large"
               name="basic"
               initialValues={{
-                username: getUser() 
+                username: getUser(),
+                categoria: "Alimentação" 
               }}
               onFinish={onFinish}
             >
@@ -63,7 +61,7 @@ function CreateSpent() {
                 label="Valor"
                 rules={[{ required: true }]}
               >
-                <Input prefix={"R$"} type="number" />
+                <Input prefix={"R$"} type="number" placeholder="100.00"/>
               </Form.Item>
               <Form.Item
                 name="categoria"
